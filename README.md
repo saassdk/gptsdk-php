@@ -40,7 +40,7 @@ Install this package as a dependency using [Composer](https://getcomposer.org).
 composer require saassdk/gptsdk-php
 ```
 
-<!--
+
 ## Usage
 
 Provide a brief description or short example of how to use this library.
@@ -48,12 +48,63 @@ If you need to provide more detailed examples, use the `docs/` directory
 and provide a link here to the documentation.
 
 ``` php
-use Gptsdk\Example;
 
-$example = new Example();
-echo $example->greet('fellow human');
+<?php
+
+use Gptsdk\AI\AnthropicAIVendor;
+use Gptsdk\AI\CompletionAi;
+use Gptsdk\AI\OpenAIVendor;
+use Gptsdk\Compilers\DoubleBracketsPromptCompiler;
+use Gptsdk\Enum\CompilerType;
+use Gptsdk\Storage\GithubPromptStorage;
+use Gptsdk\Types\AiRequest;
+use Symfony\Component\HttpClient\HttpClient;
+use Gptsdk\Storage\TempLocalPromptStorage;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+
+$githubOwner = 'AndriiMz';
+$githubRepositoryName = 'gptsdk-prompts';
+$githubToken = 'github-token-here';
+$openAiToken = 'openai-token-here';
+
+$tempLocalPromptStorage = new TempLocalPromptStorage();
+$tempLocalPromptStorage->resetPromptCache();
+
+$completionAi = new CompletionAi(
+    [
+        'openai' => new OpenAIVendor(HttpClient::create()),
+        'anthropic' => new AnthropicAIVendor(HttpClient::create())
+    ],
+    [
+        CompilerType::DOUBLE_BRACKETS->value => new DoubleBracketsPromptCompiler()
+    ],
+    new GithubPromptStorage(
+        HttpClient::create(),
+        $githubOwner,
+        $githubRepositoryName,
+        $githubToken,
+        $tempLocalPromptStorage
+    )
+);
+
+print_r(
+    $completionAi->complete([
+        new AiRequest(
+            apiKey: $openAiToken,
+            aiVendor: 'openai',
+            llmOptions: ['model' => 'gpt-3.5-turbo'],
+            promptPath: 'first1.prompt',
+            variableValues: [
+                'variable1' => 'Hello'
+            ]
+        )
+    ])[0]->plainResponse
+);
+
 ```
--->
+
 
 
 ## Contributing
