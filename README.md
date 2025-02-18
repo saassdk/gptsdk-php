@@ -1,11 +1,12 @@
-<h1 align="center">saassdk/gptsdk-php</h1>
-<p align="center">
+##
+<img src="https://gpt-sdk.com/logo.png" alt="GptSdk Logo" width="140">
+
+<p>
     <a href="https://github.com/saassdk/gptsdk-php"><img src="https://img.shields.io/badge/source-saassdk/gptsdk--php-blue.svg?style=flat-square" alt="Source Code"></a>
     <a href="https://packagist.org/packages/saassdk/gptsdk-php"><img src="https://img.shields.io/packagist/v/saassdk/gptsdk-php.svg?style=flat-square&label=release" alt="Download Package"></a>
     <a href="https://php.net"><img src="https://img.shields.io/packagist/php-v/saassdk/gptsdk-php.svg?style=flat-square&colorB=%238892BF" alt="PHP Programming Language"></a>
     <a href="https://github.com/saassdk/gptsdk-php/blob/main/LICENSE"><img src="https://img.shields.io/packagist/l/saassdk/gptsdk-php.svg?style=flat-square&colorB=darkcyan" alt="Read License"></a>
 </p>
-
 
 ## About
 GptSdk is a powerful library designed to simplify the way you execute and manage prompts dynamically.
@@ -27,7 +28,7 @@ The library retrieves and compiles .prompt files dynamically, allowing for real-
 Easily integrate GptSdk with your AI workflows. The library supports multiple AI vendors, and its modular design lets you extend functionality as needed.
 
 
-### Why Use GptSdk?:
+### Why Use GptSdk?
 - **Centralized Prompt Management** Keep your prompts organized and versioned alongside your code.
 - **Dynamic Workflow** Update and execute prompts instantly without delays.
 - **Open-Source and Free** Use the library at no cost with the freedom to customize and extend it.
@@ -155,7 +156,7 @@ This section explains how to connect your repository to the UI, the features it 
 ---
 
 **1. Connecting Your Repository**
-- **Step 1**: Sign in to the GptSdk UI. If you don’t have an account, [create one here](https://app.gpt-sdk.com/signup).
+- **Step 1**: Sign in to the GptSdk UI. If you don’t have an account, [create one here](https://app.gpt-sdk.com/login).
 - **Step 2**: Link your version control repository (GitHub, GitLab, or Bitbucket).
 - **Step 3**: Sync your prompts stored in the repository to start managing them in the UI.
 
@@ -203,6 +204,9 @@ Dive deeper into prompt management, explore best practices, and stay updated wit
 
 ---
 **Resources List:**
+- [Comparing AI Prompt Management Tools](https://gpt-sdk.com/article/Comparing-AI-Prompt-Management-Tools)
+- [Version Control Best Practices for Prompt Management](https://gpt-sdk.com/article/Version-Control-Best-Practices-for-Prompt-Management)
+- [Mastering Prompt Notation](https://gpt-sdk.com/article/Mastering-Prompt-Notation)
 
 ---
 
