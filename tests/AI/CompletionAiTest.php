@@ -21,6 +21,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 
 use function base64_encode;
 use function json_encode;
+use function sha1;
 
 class CompletionAiTest extends TestCase
 {
@@ -139,6 +140,7 @@ class CompletionAiTest extends TestCase
 
     public function testCompleteMock(): void
     {
+        $githubHttpClient = $this->mockery(HttpClientInterface::class);
         $mockedCompletionAi = new CompletionAi(
             [
                 'openai' => new MockVendor(),
@@ -147,7 +149,7 @@ class CompletionAiTest extends TestCase
                 CompilerType::DOUBLE_BRACKETS->value => new DoubleBracketsPromptCompiler(),
             ],
             new GithubPromptStorage(
-                $this->githubHttpClient,
+                $githubHttpClient,
                 'saassdk',
                 'gptsdk-prompts',
                 'super-secret-token',
@@ -159,7 +161,7 @@ class CompletionAiTest extends TestCase
 
         $this->tempLocalPromptStorage->resetPromptCache();
         /** @var Expectation $githubExpectation */
-        $githubExpectation = $this->githubHttpClient->expects('request');
+        $githubExpectation = $githubHttpClient->expects('request');
         $githubExpectation
             ->once()
             ->andReturn($this->mockery(ResponseInterface::class, [
@@ -171,9 +173,9 @@ class CompletionAiTest extends TestCase
                         'mocks' => [
                             sha1((string) json_encode($variableValues)) => [
                                 'variableValues' => $variableValues,
-                                'output' => ['messages' => ['Hello']]
-                            ]
-                        ]
+                                'output' => ['messages' => ['Hello']],
+                            ],
+                        ],
                     ])),
                 ],
                 'getStatusCode' => 200,
@@ -186,8 +188,8 @@ class CompletionAiTest extends TestCase
                     aiVendor: 'openai',
                     llmOptions: ['model' => 'gpt4o'],
                     promptPath: 'hello.prompt',
-                    variableValues: $variableValues
-                )
+                    variableValues: $variableValues,
+                ),
             ],
         );
 
@@ -197,8 +199,7 @@ class CompletionAiTest extends TestCase
         $this->assertArrayHasKey(0, $responses[0]->plainResponse['messages']);
         $this->assertSame(
             'Hello',
-            $responses[0]->plainResponse['messages'][0]
+            $responses[0]->plainResponse['messages'][0],
         );
-
     }
 }
