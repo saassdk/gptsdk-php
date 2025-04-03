@@ -34,6 +34,7 @@ class TempLocalPromptStorageTest extends TestCase
                 [new PromptMessage('User', 'Hello OpenAI!')],
                 [new PromptVariable('who', 'string')],
                 CompilerType::DOUBLE_BRACKETS,
+                mocks: [],
             ),
         );
 

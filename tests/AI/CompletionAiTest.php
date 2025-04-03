@@ -6,6 +6,7 @@ namespace Gptsdk\Test\AI;
 
 use Gptsdk\AI\AnthropicAIVendor;
 use Gptsdk\AI\CompletionAi;
+use Gptsdk\AI\MockVendor;
 use Gptsdk\AI\OpenAIVendor;
 use Gptsdk\Compilers\DoubleBracketsPromptCompiler;
 use Gptsdk\Enum\CompilerType;
@@ -134,5 +135,70 @@ class CompletionAiTest extends TestCase
             'Anthropic response',
             $responses[1]->plainResponse['completion'],
         );
+    }
+
+    public function testCompleteMock(): void
+    {
+        $mockedCompletionAi = new CompletionAi(
+            [
+                'openai' => new MockVendor(),
+            ],
+            [
+                CompilerType::DOUBLE_BRACKETS->value => new DoubleBracketsPromptCompiler(),
+            ],
+            new GithubPromptStorage(
+                $this->githubHttpClient,
+                'saassdk',
+                'gptsdk-prompts',
+                'super-secret-token',
+                $this->tempLocalPromptStorage,
+            ),
+        );
+
+        $variableValues = ['ai' => 'Man'];
+
+        $this->tempLocalPromptStorage->resetPromptCache();
+        /** @var Expectation $githubExpectation */
+        $githubExpectation = $this->githubHttpClient->expects('request');
+        $githubExpectation
+            ->once()
+            ->andReturn($this->mockery(ResponseInterface::class, [
+                'toArray' => [
+                    'content' => base64_encode((string) json_encode([
+                        'messages' => [['role' => 'User', 'content' => 'Hello [[ai]]!']],
+                        'variables' => [['type' => 'string', 'name' => 'ai']],
+                        'compilerType' => CompilerType::DOUBLE_BRACKETS,
+                        'mocks' => [
+                            sha1((string) json_encode($variableValues)) => [
+                                'variableValues' => $variableValues,
+                                'output' => ['messages' => ['Hello']]
+                            ]
+                        ]
+                    ])),
+                ],
+                'getStatusCode' => 200,
+            ]));
+
+        $responses = $mockedCompletionAi->complete(
+            [
+                new AiRequest(
+                    apiKey: 'secret-openai-key',
+                    aiVendor: 'openai',
+                    llmOptions: ['model' => 'gpt4o'],
+                    promptPath: 'hello.prompt',
+                    variableValues: $variableValues
+                )
+            ],
+        );
+
+        $this->assertIsArray($responses[0]->plainResponse);
+        $this->assertArrayHasKey('messages', $responses[0]->plainResponse);
+        $this->assertIsArray($responses[0]->plainResponse['messages']);
+        $this->assertArrayHasKey(0, $responses[0]->plainResponse['messages']);
+        $this->assertSame(
+            'Hello',
+            $responses[0]->plainResponse['messages'][0]
+        );
+
     }
 }
