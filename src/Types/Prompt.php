@@ -18,12 +18,14 @@ class Prompt
     /**
      * @param PromptMessage[] $messages
      * @param PromptVariable[] $variables
+     * @param PromptMock[] $mocks
      */
     public function __construct(
         public readonly string $path,
         public readonly array $messages,
         public readonly array $variables,
         public readonly CompilerType $compilerType,
+        public readonly array $mocks,
     ) {
     }
 }

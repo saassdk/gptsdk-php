@@ -15,6 +15,7 @@ use Gptsdk\Enum\CompilerType;
 use Gptsdk\Interfaces\PromptStorage;
 use Gptsdk\Types\Prompt;
 use Gptsdk\Types\PromptMessage;
+use Gptsdk\Types\PromptMock;
 use Gptsdk\Types\PromptVariable;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -82,6 +83,13 @@ class TempLocalPromptStorage implements PromptStorage
             ),
             compilerType: CompilerType::tryFrom((string) ($promptArray['compilerType'] ?? '')) ??
                 CompilerType::DOUBLE_BRACKETS,
+            mocks: array_map(
+                fn (array $mock) => new PromptMock(
+                    variableValues: (array) $mock['variableValues'],
+                    output: (array) $mock['output'],
+                ),
+                (array) ($promptArray['mocks'] ?? []),
+            ),
         );
     }
 
