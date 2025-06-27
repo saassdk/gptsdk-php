@@ -22,6 +22,7 @@ use RecursiveIteratorIterator;
 use SplFileInfo;
 
 use function array_map;
+use function explode;
 use function file_exists;
 use function file_get_contents;
 use function file_put_contents;
@@ -37,6 +38,7 @@ use function sys_get_temp_dir;
 use function unlink;
 
 use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
 
 class TempLocalPromptStorage implements PromptStorage
 {
@@ -78,6 +80,7 @@ class TempLocalPromptStorage implements PromptStorage
                     name: (string) ($variable['name'] ?? ''),
                     type: (string) ($variable['type'] ?? ''),
                     note: isset($variable['note']) ? (string) $variable['note'] : null,
+                    options: isset($variable['options']) ? explode(PHP_EOL, $variable['options']) : null,
                 ),
                 is_array($promptArray['variables']) ? $promptArray['variables'] : [],
             ),

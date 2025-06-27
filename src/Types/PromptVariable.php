@@ -13,12 +13,17 @@ namespace Gptsdk\Types;
 
 use JsonSerializable;
 
+use function implode;
+
+use const PHP_EOL;
+
 class PromptVariable implements JsonSerializable
 {
     public function __construct(
         public readonly string $name,
         public readonly string $type,
         public readonly ?string $note = null,
+        public readonly ?array $options = null,
     ) {
     }
 
@@ -31,6 +36,7 @@ class PromptVariable implements JsonSerializable
             'name' => $this->name,
             'type' => $this->type,
             'note' => $this->note,
+            'options' => implode(PHP_EOL, $this->options),
         ];
     }
 }

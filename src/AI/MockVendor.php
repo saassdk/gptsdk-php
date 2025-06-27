@@ -9,15 +9,20 @@ use Gptsdk\Types\AiRequest;
 use Gptsdk\Types\MockResponse;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-use function json_encode;
-use function sha1;
+use function array_diff;
+use function count;
 
 class MockVendor implements AIVendor
 {
     public function complete(AiRequest $aiRequest): ResponseInterface
     {
-        $mockHash = sha1((string) json_encode($aiRequest->variableValues));
+        $rightMock = null;
+        foreach ($aiRequest->prompt->mocks as $mock) {
+            if (count(array_diff($mock->variableValues, $aiRequest->variableValues)) === 0) {
+                $rightMock = $mock;
+            }
+        }
 
-        return new MockResponse($aiRequest->prompt->mocks[$mockHash]?->output ?? []);
+        return new MockResponse($rightMock?->output ?? []);
     }
 }
