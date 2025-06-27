@@ -24,6 +24,7 @@ use function array_map;
 use function base64_decode;
 use function explode;
 use function is_array;
+use function is_string;
 use function json_decode;
 
 use const PHP_EOL;
@@ -86,7 +87,9 @@ class GithubPromptStorage implements PromptStorage
                         name: (string) ($variable['name'] ?? ''),
                         type: (string) ($variable['type'] ?? ''),
                         note: isset($variable['note']) ? (string) $variable['note'] : null,
-                        options: isset($variable['options']) ? explode(PHP_EOL, $variable['options']) : null,
+                        options: isset($variable['options']) &&
+                            is_string($variable['options']) ?
+                            explode(PHP_EOL, $variable['options']) : null,
                     ),
                     is_array($promptArray['variables']) ? $promptArray['variables'] : [],
                 ),

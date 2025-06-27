@@ -19,6 +19,9 @@ use const PHP_EOL;
 
 class PromptVariable implements JsonSerializable
 {
+    /**
+     * @param array<string> $options
+     */
     public function __construct(
         public readonly string $name,
         public readonly string $type,
@@ -36,7 +39,7 @@ class PromptVariable implements JsonSerializable
             'name' => $this->name,
             'type' => $this->type,
             'note' => $this->note,
-            'options' => implode(PHP_EOL, $this->options),
+            'options' => $this->options !== null ? implode(PHP_EOL, $this->options) : null,
         ];
     }
 }

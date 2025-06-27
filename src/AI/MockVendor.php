@@ -17,7 +17,7 @@ class MockVendor implements AIVendor
     public function complete(AiRequest $aiRequest): ResponseInterface
     {
         $rightMock = null;
-        foreach ($aiRequest->prompt->mocks as $mock) {
+        foreach (($aiRequest->prompt?->mocks ?? []) as $mock) {
             if (count(array_diff($mock->variableValues, $aiRequest->variableValues)) === 0) {
                 $rightMock = $mock;
             }

@@ -29,6 +29,7 @@ use function file_put_contents;
 use function implode;
 use function is_array;
 use function is_dir;
+use function is_string;
 use function json_decode;
 use function json_encode;
 use function mkdir;
@@ -80,7 +81,9 @@ class TempLocalPromptStorage implements PromptStorage
                     name: (string) ($variable['name'] ?? ''),
                     type: (string) ($variable['type'] ?? ''),
                     note: isset($variable['note']) ? (string) $variable['note'] : null,
-                    options: isset($variable['options']) ? explode(PHP_EOL, $variable['options']) : null,
+                    options: isset($variable['options']) &&
+                        is_string($variable['options']) ?
+                        explode(PHP_EOL, $variable['options']) : null,
                 ),
                 is_array($promptArray['variables']) ? $promptArray['variables'] : [],
             ),
